@@ -5,7 +5,7 @@ from app import db
 class PitchModelTest(unittest.TestCase):
     def setUp(self):
         self.new_pitch = Pitch(title = "title", description = "Description", upvotes = 1, downvotes = 1, category_id =1, user_id = 1)
-        self.new_user = User(username = "diana", email ="diana@gmail.com", bio = "I am awesome", profile_pic_url = "image_url", password = 'diana')
+        self.new_user = User(username = "kennedy", email ="kennedymbithi12@gmail.com", bio = "I am incredible", profile_pic_url = "image_url", password = 'kenny')
         self.new_category = Category(category_name = 'category', id = 1)
 
     def tearDown(self):

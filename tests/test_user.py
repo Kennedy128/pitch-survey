@@ -4,7 +4,7 @@ from app import db
 
 class UserModelTest(unittest.TestCase):
     def setUp(self):
-        self.new_user = User(username = "diana", email ="diana@gmail.com", bio = "I am awesome", profile_pic_url = "image_url", password = 'diana', id = 1 )
+        self.new_user = User(username = "kennedy", email ="kennedymbithi12@gmail.com", bio = "I am incredible", profile_pic_url = "image_url", password = 'kenny', id = 1 )
 
     def tearDown(self):
         User.query.delete()
@@ -21,11 +21,11 @@ class UserModelTest(unittest.TestCase):
             self.new_user.password
 
     def test_password_verification(self):
-        self.assertTrue(self.new_user.verify_password('diana'))
+        self.assertTrue(self.new_user.verify_password('Kennedy'))
 
     def test_check_instance_variables(self):
-        self.assertEquals(self.new_user.username, 'diana')
-        self.assertEquals(self.new_user.email, 'diana@gmail.com')
-        self.assertEquals(self.new_user.bio, 'I am awesome')
+        self.assertEquals(self.new_user.username, 'kennedy')
+        self.assertEquals(self.new_user.email, 'kennedymbithi12@gmail.com')
+        self.assertEquals(self.new_user.bio, 'I am incredible')
         self.assertEquals(self.new_user.profile_pic_url, 'image_url')
-        self.assertEquals(self.new_user.password,'diana' )
+        self.assertEquals(self.new_user.password,'kenny' )

@@ -38,7 +38,7 @@ def login():
 
         if user is not None and user.verify_password(user_password):
             login_user(user,remember)
-            flash("Welcome to Pitch Perfect")
+            flash("Welcome to Pitching.a wonderful experience awaits you")
             return redirect(request.args.get('next') or url_for('main.index'))
         flash("Invalid username or pasword")
     return render_template("auth/login.html", login_form = form,title = title)
