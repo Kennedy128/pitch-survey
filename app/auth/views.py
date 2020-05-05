@@ -1,10 +1,11 @@
- 
 from flask import render_template,redirect,url_for,flash, request
 from app.models import User
 from .forms import RegistrationForm, LoginForm
 from .. import db
 from flask_login import login_user, login_required, logout_user
 from . import auth 
+from ..email import mail_message
+
 #Views
 @auth.route('/register', methods = ["GET", "POST"])
 def register():
@@ -16,6 +17,8 @@ def register():
         password = form.password.data
         new_user = User(email = email,username = username, password =password)
         new_user.save_user()
+
+        mail_message("Welcome to Pitcher", "email/welcome_user", new_user.email, user = new_user)
         return redirect(url_for('auth.login'))
         
     return render_template('auth/register.html', registration_form = form)

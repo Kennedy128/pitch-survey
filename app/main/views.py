@@ -2,7 +2,7 @@ from flask import render_template,request,redirect,url_for,abort
 from . import main
 from flask_login import login_required, current_user
 from app.models import User, Pitch, Category, Comment
-from .forms import UpdateProfile,addPitch
+from .forms import UpdateProfile,addPitch,addComment
 from .. import db
 from datetime import datetime
 
@@ -16,16 +16,15 @@ def index():
     return render_template('index.html', title = title, categories = categories )
 
 @main.route('/pitches/<category_id>')
-def pitches_by_category():
+def pitches_by_category(category_id):
     '''
     View pitches page function that displays the picthes available
     '''
-    category_id = Category.id
     pitches = Pitch.get_category_pitch(category_id)
 
-    return render_template('pitches.html', picthes = pitches)
+    return render_template('pitches.html', pitches = pitches)
 
-@main.route('/user/<uname>/addpitch',methods =['GET', 'POST'])
+@main.route('/user/ <uname>/addpitch',methods =['GET', 'POST'])
 @login_required
 def add_pitch(uname):
     title = "Add pitch"
@@ -37,16 +36,16 @@ def add_pitch(uname):
     if form.validate_on_submit():
         title = form.title.data
         categorydata = form.category.data
-        category = Category.get_category_name(categorydata)
+        category_id = (Category.get_category_name(categorydata))
         description = form.description.data
-        upvote = 0
-        downvote = 0
+        upvotes = 0
+        downvotes = 0
         
         
-        new_pitch = Pitch(title=title, category= category, description = description, user = user, upvote = upvote, downvote = downvote)
+        new_pitch = Pitch(title=title, category_id = category_id, description = description, user = user, upvotes = upvotes, downvotes = downvotes)
         new_pitch.save_pitch()
 
-        return redirect(url_for("main.pitches_by_category",category = category))
+        return redirect(url_for("main.index"))
     return render_template("addpitch.html", form = form, title = title)
         
 
@@ -57,7 +56,9 @@ def profile(uname):
     if user is None:
         abort(404)
 
-    return render_template("profile/profile.html", user = user)
+    pitches = Pitch.get_user_pitch(user.id)
+
+    return render_template("profile/profile.html", pitches = pitches , user = user)
 
 
 @main.route('/user/<uname>/update', methods = ['GET','POST'])
@@ -89,3 +90,23 @@ def update_pic(uname):
         db.session.commit()
 
     return redirect(url_for('main.profile', uname = uname))
+
+@main.route("/<user>/<pitch_id>/addcomment", methods = ['GET', 'POST'])
+@login_required
+def comment(user,pitch_id):
+    user= User.query.filter_by(id = user).first()
+    user_id = user.id
+    pitch = Pitch.query.filter_by(id = pitch_id).first()
+    pitcher_id = pitch.id
+    print('-'*75)
+    print(pitcher_id)
+    title = "Add Comment"
+    form = addComment()
+    if form.validate_on_submit:
+        content = form.content.data
+        new_comment = Comment(content= content, user_id = user_id, pitch_id = pitcher_id)
+        new_comment.save_comment()
+
+        return redirect(url_for('main.index'))
+
+    return render_template("comment.html", title = title,form = form, pitch = pitch)
